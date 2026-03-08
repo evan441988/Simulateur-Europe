@@ -607,9 +607,11 @@ svg#map{
         margin-bottom: 40px !important;
     }
 
-    /* 2. Rend la carte réactive sans toucher aux frontières ! */
+    /* 2. Force l'affichage des frontières sur téléphone */
     svg path {
         touch-action: manipulation !important;
+        stroke: #000000 !important; /* Force la frontière en noir (tu pourras changer la couleur) */
+        stroke-width: 1px !important; /* Force une épaisseur visible par l'écran */
     }
 
     /* 3. Cache les textes illisibles sur la carte */
