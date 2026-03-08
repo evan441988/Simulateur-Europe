@@ -621,4 +621,9 @@ svg#map{
     #welcome-overlay > div {
         margin-top: 30px !important;
         margin-bottom: 40px !important; /* Donne de l'air sous le bouton */
+        
+    /* 3. On nettoie la carte sur mobile en cachant les textes écrasés */
+    svg text {
+        display: none !important;
+    }
     }
