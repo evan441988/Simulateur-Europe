@@ -607,15 +607,19 @@ svg#map{
         margin-bottom: 40px !important;
     }
 
-    /* 2. Force l'affichage des frontières sur téléphone */
+    /* 2. Frontières nettes ET clics instantanés (anti-bug) */
     svg path {
         touch-action: manipulation !important;
-        stroke: #000000 !important; /* Force la frontière en noir (tu pourras changer la couleur) */
-        stroke-width: 1px !important; /* Force une épaisseur visible par l'écran */
+        stroke: #000000 !important;
+        stroke-width: 1px !important;
+        -webkit-tap-highlight-color: transparent !important; /* Désactive le bug du double-clic natif du téléphone */
+        cursor: pointer !important;
     }
 
-    /* 3. Cache les textes illisibles sur la carte */
+    /* 3. On réaffiche les textes sans qu'ils bloquent le doigt */
     svg text {
-        display: none !important;
+        display: block !important; /* On les remet */
+        font-size: 8px !important; /* On les rapetisse pour la version mobile */
+        pointer-events: none !important; /* MAGIE : le doigt traverse le texte pour cliquer directement sur le pays ! */
     }
 }
