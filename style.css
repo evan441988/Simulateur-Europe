@@ -602,11 +602,12 @@ svg#map{
         stroke: inherit !important; 
         stroke-width: inherit !important;
     }
+    
     /* 3. On nettoie la carte sur mobile en cachant les textes écrasés */
     svg text {
         display: none !important;
     }
-    
+
     /* ==========================================
        RÉPARATION DE L'ÉCRAN D'ACCUEIL MOBILE
        ========================================== */
