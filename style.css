@@ -586,45 +586,34 @@ svg#map{
     }
     }
 }
-
 /* ==========================================
-   RÉPARATION DES CLICS SUR MOBILE (ZÉRO BUG)
+   ULTIME RÉPARATION MOBILE (ACCUEIL + CARTE)
    ========================================== */
 @media (max-width: 900px) {
-    /* 1. Force le téléphone à cliquer instantanément sans attendre */
-    svg path {
-        touch-action: manipulation !important;
-        cursor: pointer !important;
-    }
-
-    /* 2. On désactive l'effet de survol (le contour blanc) qui rend le téléphone confus */
-    svg path:hover {
-        stroke: inherit !important; 
-        stroke-width: inherit !important;
+    /* 1. Répare l'écran d'accueil (scroll possible vers le bouton) */
+    #welcome-overlay {
+        overflow-y: auto !important;
+        padding: 20px !important;
+        align-items: flex-start !important;
     }
     
-    /* 3. On nettoie la carte sur mobile en cachant les textes écrasés */
-    svg text {
-        display: none !important;
-    }
-
-    /* ==========================================
-       RÉPARATION DE L'ÉCRAN D'ACCUEIL MOBILE
-       ========================================== */
-    #welcome-overlay {
-        overflow-y: auto !important; /* Autorise le scroll si le texte dépasse */
-        align-items: flex-start !important; /* Empêche le blocage du haut et du bas */
-        padding: 20px !important;
-    }
-
     #welcome-overlay p {
-        font-size: 0.9rem !important; /* Réduit la taille de la police */
-        line-height: 1.4 !important; /* Rapproche un peu les lignes */
+        font-size: 0.9rem !important;
+        line-height: 1.4 !important;
     }
-
-    /* Si l'IA a mis le texte dans une boîte centrale */
+    
     #welcome-overlay > div {
         margin-top: 30px !important;
-        margin-bottom: 40px !important; /* Donne de l'air sous le bouton */
+        margin-bottom: 40px !important;
+    }
+
+    /* 2. Rend la carte réactive sans toucher aux frontières ! */
+    svg path {
+        touch-action: manipulation !important;
+    }
+
+    /* 3. Cache les textes illisibles sur la carte */
+    svg text {
+        display: none !important;
     }
 }
