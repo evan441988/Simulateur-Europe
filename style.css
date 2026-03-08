@@ -1,0 +1,605 @@
+/* Désactive le carré bleu au clic sur mobile */
+* {
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+/* =========================================
+   CORRECTIONS ANTI-BUGS (PC & MOBILE)
+   ========================================= */
+
+/* 1. On tue l'animation insupportable de la bannière de victoire (PC et Mobile) */
+#winner-bar {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+    margin-bottom: 10px !important; /* Garde un espace fixe pour ne rien bousculer */
+}
+
+/* 2. On transforme l'infobulle en panneau intégré sous les scénarios (Mobile) */
+@media (max-width: 900px) {
+    body div#tooltip {
+        position: relative !important; /* Elle ne flotte plus ! */
+        top: auto !important;
+        bottom: auto !important;
+        left: auto !important;
+        transform: none !important; /* On annule l'ancien centrage */
+        width: 95% !important;
+        max-width: none !important;
+        margin: 5px auto 10px auto !important; /* Un peu d'espace autour */
+        background: rgba(20, 25, 45, 0.8) !important; /* Un fond élégant */
+        border-radius: 8px !important;
+        pointer-events: none !important;
+        z-index: 1 !important;
+    }
+}
+/* ========================================= */
+
+/* =========================================
+   RESTAURATION DU CHIFFRE CENTRAL (470)
+   ========================================= */
+.sc-270, .sc-470 {
+    font-size: 3.5rem !important; /* Taille géante pour le PC */
+    font-weight: 900 !important; /* Texte très gras */
+    line-height: 1 !important;
+    text-align: center !important;
+}
+
+@media (max-width: 900px) {
+    .sc-270, .sc-470 {
+        font-size: 2.5rem !important; /* Taille un peu plus petite sur mobile */
+    }
+}
+/* ========================================= */
+
+/* ════════════════════════════════════════════════════
+   RESET & TOKENS
+════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0f1e;
+--blue: #003399;   --blue-1: #3366CC;  /* Bleu Europe (Fédéralistes) */
+    --red: #6A1B9A;    --red-1: #9C27B0;   /* Pourpre (Souverainistes) */
+  --neutral:#3d4460;
+  --glass-bg:rgba(8,12,28,0.78);
+  --glass-border:rgba(255,255,255,0.08);
+  --glass-blur:blur(16px);
+  --text:#e8eaf6;  --text-dim:#6b7399;  --text-muted:#3a4060;
+}
+html,body{height:100%;overflow:hidden;}
+body{
+  font-family:'JetBrains Mono',monospace;color:var(--text);
+  background:
+    radial-gradient(ellipse at 18% 50%,rgba(26,115,232,0.07) 0%,transparent 52%),
+    radial-gradient(ellipse at 82% 50%,rgba(211,47,47,0.07)  0%,transparent 52%),
+    #0b0f1e;
+  display:flex;flex-direction:column;
+}
+
+/* ════════════════════════════════════════════════════
+   HEADER
+════════════════════════════════════════════════════ */
+#header{
+  flex-shrink:0;padding:10px 22px;
+  display:flex;align-items:center;gap:18px;
+  border-bottom:1px solid var(--glass-border);
+  background:var(--glass-bg);
+  backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  position:relative;z-index:10;
+}
+#title{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(1rem,2.2vw,1.5rem);letter-spacing:4px;text-transform:uppercase;
+  background:linear-gradient(90deg,#7eb8ff,#c5dcff 35%,#ffc5c5 65%,#ff8a8a);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+#subtitle{font-size:0.58rem;color:var(--text-muted);letter-spacing:3px;text-transform:uppercase;margin-top:2px;}
+.live{
+  margin-left:auto;display:flex;align-items:center;gap:7px;
+  font-size:0.58rem;color:#4ade80;letter-spacing:3px;text-transform:uppercase;
+}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:blink 1.6s ease infinite;}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 7px #4ade80}50%{opacity:0.2;box-shadow:none}}
+
+/* ════════════════════════════════════════════════════
+   TOPBAR — SCOREBOARD + SNAKE
+════════════════════════════════════════════════════ */
+#topbar{
+  flex-shrink:0;padding:10px 22px 24px;
+  background:var(--glass-bg);
+  backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  border-bottom:1px solid var(--glass-border);
+  position:relative;z-index:9;
+}
+.scores-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px;}
+.sc-block{display:flex;flex-direction:column;}
+.sc-party{
+  font-family:'Syne',sans-serif;font-size:0.65rem;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;opacity:0.65;margin-bottom:2px;
+}
+.sc-party.dem{color:var(--blue-l)}.sc-party.rep{color:var(--red-l)}
+.sc-num{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1;}
+.sc-num.dem{color:var(--blue);text-shadow:0 0 32px rgba(26,115,232,0.45);}
+.sc-num.rep{color:var(--red);text-shadow:0 0 32px rgba(211,47,47,0.45);}
+.sc-center{text-align:center;}
+.sc-270{
+  font-family:'Syne',sans-serif;font-size:clamp(1.2rem,2.5vw,1.8rem);
+  font-weight:800;color:rgba(255,255,255,0.18);letter-spacing:2px;
+}
+.sc-label{font-size:0.52rem;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+
+/* ── ELECTORAL SNAKE ── */
+#snake-wrap{
+  position:relative;height:30px;border:1px solid var(--glass-border);
+  border-radius:5px;overflow:hidden;display:flex;flex-direction:row;width:100%;min-width:0;
+}
+#snake-dem{display:flex;flex-direction:row;flex-grow:0;flex-shrink:0;min-width:0;pointer-events:none;}
+#snake-tossup{flex-grow:1;flex-shrink:1;min-width:0;background:rgba(61,68,96,0.4);pointer-events:none;}
+#snake-rep{display:flex;flex-direction:row-reverse;flex-grow:0;flex-shrink:0;min-width:0;pointer-events:none;}
+.snake-block{
+  height:100%;flex-grow:0;flex-shrink:0;overflow:hidden;
+  transition:width 0.5s ease-in-out,background-color 0.3s ease;
+  border-right:1px solid rgba(0,0,0,0.25);box-sizing:border-box;
+}
+.snake-block:last-child{border-right:none;}
+.snake-block.blue{background:var(--blue);}
+.snake-block.lightBlue{background:var(--blue-l);}
+.snake-block.red{background:var(--red);}
+.snake-block.lightRed{background:var(--red-l);}
+.snake-center{
+  position:absolute;left:50%;top:-5px;bottom:-5px;
+  width:3px;background:#fff;z-index:10;transform:translateX(-50%);
+  box-shadow:0 0 10px #fff,0 0 22px rgba(255,255,255,0.65),0 0 44px rgba(255,255,255,0.2);
+}
+.snake-center::after{
+  content:'270';position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);
+  font-size:0.5rem;color:#fff;letter-spacing:1px;
+  font-family:'JetBrains Mono',monospace;white-space:nowrap;text-shadow:0 0 8px #fff;
+}
+
+/* ── TOSSUP ROW ── */
+#tossup-row{display:flex;justify-content:space-between;align-items:center;margin-top:22px;}
+.tossup-pill{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+  border-radius:3px;padding:4px 14px;
+}
+.tossup-dot{width:8px;height:8px;border-radius:2px;background:#3d4460;flex-shrink:0;}
+.tossup-label{font-size:0.58rem;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;}
+#score-tossup{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:#6b7399;letter-spacing:1px;}
+.tossup-ev{font-size:0.52rem;color:var(--text-muted);letter-spacing:1px;}
+.btn-share{
+  font-family:'Syne',sans-serif;font-size:0.6rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;padding:5px 13px;border-radius:3px;
+  cursor:pointer;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.6);transition:all 0.2s;
+}
+.btn-share:hover{background:rgba(255,255,255,0.1);color:#fff;}
+
+/* ── WINNER BANNER ── */
+#winner-bar{
+  display:none;text-align:center;margin-top:12px;padding:6px 14px;border-radius:4px;
+  font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;
+  animation:winflash 0.9s ease infinite alternate;
+}
+@keyframes winflash{from{opacity:.85;letter-spacing:2px}to{opacity:1;letter-spacing:4px}}
+
+/* ════════════════════════════════════════════════════
+   MAIN LAYOUT
+════════════════════════════════════════════════════ */
+#main{flex:1;display:flex;overflow:hidden;position:relative;}
+#map-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* ════════════════════════════════════════════════════
+   SCENARIO CONTROLS
+════════════════════════════════════════════════════ */
+#controls{
+  flex-shrink:0;padding:7px 14px;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  background:var(--glass-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  border-bottom:1px solid var(--glass-border);
+}
+.ctrl-lbl{font-size:0.55rem;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-right:2px;}
+.btn{
+  font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  padding:5px 14px;border-radius:3px;cursor:pointer;border:1px solid transparent;transition:all 0.2s;
+}
+.btn-reset{background:rgba(255,255,255,0.04);border-color:var(--glass-border);color:var(--text-dim);}
+.btn-reset:hover{background:rgba(255,255,255,0.09);color:var(--text);}
+.btn-blue {
+    border: 1px solid var(--blue);
+    background: rgba(0, 51, 153, 0.1);
+    color: var(--blue-1);
+}
+.btn-blue:hover {
+    background: var(--blue);
+    color: #fff;
+}
+
+.btn-red {
+    border: 1px solid var(--red);
+    background: rgba(106, 27, 154, 0.1);
+    color: var(--red-1);
+}
+.btn-red:hover {
+    background: var(--red);
+    color: #fff;
+}
+.btn-split{background:rgba(180,130,255,0.1);border-color:rgba(180,130,255,0.45);color:#c8a8ff;}
+.btn-split:hover{background:rgba(180,130,255,0.22);}
+.btn-export{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);}
+.btn-export:hover{background:rgba(255,255,255,0.13);color:#fff;}
+
+/* ════════════════════════════════════════════════════
+   MAP
+════════════════════════════════════════════════════ */
+#map-svg-wrap{flex:1;overflow:hidden;position:relative;}
+svg#map{
+  width:100%;height:100%;display:block;
+  background:radial-gradient(ellipse at 50% 55%,#0a2a45 0%,#050e1f 72%);
+}
+.background-country{fill:#172030;stroke:#0d1625;stroke-width:0.5px;pointer-events:none;}
+.country{
+  cursor:pointer;stroke:rgba(255,255,255,0.14);stroke-width:0.6px;
+  transition:stroke 0.15s,stroke-width 0.15s;
+}
+.country:hover{stroke:rgba(255,255,255,0.78);stroke-width:1.2px;}
+.micro-circle{cursor:pointer;stroke:rgba(255,255,255,0.2);stroke-width:1px;transition:stroke 0.15s;}
+.micro-circle:hover{stroke:rgba(255,255,255,0.78);stroke-width:1.5px;}
+.clabel{
+  pointer-events:none;font-family:'JetBrains Mono',monospace;font-weight:900;
+  paint-order:stroke;stroke:#000;stroke-width:4px;stroke-linejoin:round;fill:#fff;
+}
+.lbl-a{font-size:14px;}
+.lbl-s{font-size:12px;fill:#fff;paint-order:stroke;stroke:#000;stroke-width:3px;}
+
+/* ════════════════════════════════════════════════════
+   LEGEND
+════════════════════════════════════════════════════ */
+#legend{
+  flex-shrink:0;padding:5px 14px;
+  background:var(--glass-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  border-top:1px solid var(--glass-border);
+  display:flex;gap:16px;flex-wrap:wrap;align-items:center;
+}
+.leg{display:flex;align-items:center;gap:5px;font-size:0.55rem;color:var(--text-dim);letter-spacing:1px;}
+.leg-d{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+
+/* ════════════════════════════════════════════════════
+   SIDEBAR
+════════════════════════════════════════════════════ */
+#sidebar{
+  width:285px;flex-shrink:0;display:flex;flex-direction:column;
+  background:var(--glass-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  border-left:1px solid var(--glass-border);
+}
+.sb-hdr{
+  flex-shrink:0;padding:10px 14px 8px;border-bottom:1px solid var(--glass-border);
+  font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);
+}
+.sb-scroll{
+  flex:1;overflow-y:auto;padding:8px 10px 14px;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent;
+}
+.sb-scroll::-webkit-scrollbar{width:3px;}
+.sb-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
+.sb-sec{
+  font-family:'Syne',sans-serif;font-size:0.65rem;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;padding:6px 4px 4px;margin-bottom:2px;
+}
+.sb-sec.dem{color:var(--blue-l);border-bottom:1px solid rgba(26,115,232,0.25);}
+.sb-sec.rep{color:var(--red-l);border-bottom:1px solid rgba(211,47,47,0.25);margin-top:10px;}
+.sb-empty{font-size:0.58rem;color:var(--text-muted);padding:5px 4px;font-style:italic;}
+.sb-row{display:flex;align-items:center;gap:7px;padding:4px;border-radius:3px;transition:background 0.15s;}
+.sb-row:hover{background:rgba(255,255,255,0.04);}
+.sb-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
+.sb-name{font-size:0.66rem;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-seats{font-size:0.62rem;color:var(--text-dim);font-weight:500;}
+.sb-total{
+  display:flex;justify-content:space-between;
+  padding:8px 4px 2px;border-top:1px solid var(--glass-border);margin-top:6px;
+  font-size:0.58rem;color:var(--text-muted);
+}
+
+/* ════════════════════════════════════════════════════
+   TOOLTIP — ENRICHED WITH MINI DATAVIZ
+════════════════════════════════════════════════════ */
+#tooltip{
+  position:fixed;pointer-events:none;z-index:9999;display:none;
+  background:rgba(4,7,18,0.97);
+  border:1px solid rgba(255,255,255,0.13);
+  backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+  padding:13px 16px 11px;border-radius:7px;min-width:205px;
+  box-shadow:0 16px 60px rgba(0,0,0,0.85),0 0 0 1px rgba(255,255,255,0.03),
+             inset 0 1px 0 rgba(255,255,255,0.06);
+  white-space:nowrap;
+}
+.tt-abbr{font-size:0.56rem;color:var(--text-muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:3px;}
+.tt-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:#fff;margin-bottom:2px;letter-spacing:0.5px;}
+.tt-badge{
+  display:inline-block;font-size:0.6rem;font-weight:600;letter-spacing:1px;
+  padding:2px 8px;border-radius:2px;margin-bottom:10px;margin-top:2px;
+}
+.tt-sep{width:100%;height:1px;background:rgba(255,255,255,0.07);margin:8px 0 9px;}
+.tt-weight-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+.tt-weight-lbl{font-size:0.54rem;color:rgba(255,255,255,0.32);letter-spacing:2px;text-transform:uppercase;}
+.tt-weight-pct{font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:700;color:#fff;}
+.tt-track{height:6px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden;}
+.tt-fill{height:100%;border-radius:4px;transition:width 0.25s ease;}
+.tt-seats-row{
+  display:flex;justify-content:space-between;margin-top:7px;
+  font-size:0.57rem;color:rgba(255,255,255,0.28);letter-spacing:1px;
+}
+.tt-seats-val{color:rgba(255,255,255,0.68);font-weight:500;}
+.tt-hint{
+  margin-top:9px;font-size:0.49rem;color:rgba(255,255,255,0.18);
+  letter-spacing:1px;text-align:center;text-transform:uppercase;
+}
+
+/* ════════════════════════════════════════════════════
+   BREAKING NEWS TICKER
+════════════════════════════════════════════════════ */
+#ticker{
+  flex-shrink:0;height:38px;
+  background:rgba(3,5,14,0.95);
+  border-top:1px solid rgba(255,255,255,0.06);
+  display:flex;align-items:center;overflow:hidden;
+  position:relative;z-index:20;
+}
+#ticker-badge{
+  flex-shrink:0;height:100%;padding:0 16px;
+  display:flex;align-items:center;
+  background:linear-gradient(105deg,#b71c1c,#D32F2F);
+  font-family:'Syne',sans-serif;font-size:0.62rem;font-weight:800;
+  letter-spacing:3px;text-transform:uppercase;color:#fff;white-space:nowrap;
+  box-shadow:4px 0 18px rgba(183,28,28,0.55);
+}
+#ticker-track{
+  flex:1;overflow:hidden;height:100%;display:flex;align-items:center;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 2.5%,#000 97.5%,transparent 100%);
+  mask-image:linear-gradient(to right,transparent 0%,#000 2.5%,#000 97.5%,transparent 100%);
+}
+/* Recreated each time to restart animation */
+.ticker-text{
+  display:inline-block;white-space:nowrap;will-change:transform;
+  font-family:'JetBrains Mono',monospace;font-size:0.65rem;
+  color:rgba(255,255,255,0.72);letter-spacing:1.5px;
+  padding-left:100%;
+}
+.ticker-text.normal{animation:ticker-scroll 38s linear infinite;}
+.ticker-text.fast  {animation:ticker-scroll 17s linear infinite;}
+@keyframes ticker-scroll{
+  0%  {transform:translateX(0);}
+  100%{transform:translateX(-100%);}
+}
+
+/* ════════════════════════════════════════════════════
+   SHARE TOAST
+════════════════════════════════════════════════════ */
+#share-toast{
+  position:fixed;bottom:52px;left:50%;transform:translateX(-50%);
+  background:rgba(8,14,32,0.97);border:1px solid rgba(255,255,255,0.16);
+  color:#fff;padding:9px 22px;border-radius:5px;
+  font-family:'JetBrains Mono',monospace;font-size:0.68rem;letter-spacing:1px;
+  z-index:9999;display:none;pointer-events:none;
+  box-shadow:0 10px 40px rgba(0,0,0,0.7);
+  backdrop-filter:blur(24px);animation:toastIn 0.2s ease;
+}
+@keyframes toastIn{
+  from{opacity:0;transform:translateX(-50%) translateY(8px)}
+  to{opacity:1;transform:translateX(-50%) translateY(0)}
+}
+
+/* =========================================
+   ÉCRAN D'ACCUEIL (WELCOME MODAL)
+   ========================================= */
+.welcome-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(8, 12, 28, 0.6); /* Fond sombre transparent */
+    backdrop-filter: blur(12px); /* L'effet de flou sur la carte ! */
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 9999; /* Toujours au-dessus de tout */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.welcome-modal {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 650px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    margin: 20px;
+}
+
+.welcome-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem;
+    color: #fff;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.welcome-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    line-height: 1.8;
+    margin-bottom: 35px;
+    text-align: justify;
+}
+
+.welcome-text strong {
+    color: var(--blue-1);
+}
+
+.welcome-btn {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    padding: 15px 40px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.welcome-btn:hover {
+    background: #fff;
+    color: var(--bg);
+    transform: scale(1.05);
+}
+
+/* Classe pour cacher la modale quand on clique */
+.welcome-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* ==========================================
+   ADAPTATION MOBILE (SMARTPHONES & TABLETTES)
+   ========================================== */
+@media (max-width: 900px) {
+    /* 1. On passe d'un affichage gauche/droite à un affichage haut/bas */
+    #main {
+        flex-direction: column;
+        overflow-y: auto; /* Permet de scroller vers le bas avec le doigt */
+    }
+
+    /* 2. La carte prend toute la largeur et une bonne hauteur */
+    #map-panel {
+        min-height: 50vh; /* Prend au moins la moitié de l'écran */
+        flex: none;
+    }
+
+    /* 3. La barre latérale passe en dessous et prend toute la largeur */
+    #sidebar {
+        width: 100%;
+        max-width: none;
+        border-left: none;
+        border-top: 1px solid var(--glass-border);
+        flex: none;
+    }
+
+    /* 4. On recentre les boutons de scénarios */
+    #controls {
+        justify-content: center;
+    }
+
+    /* 5. On réduit un tout petit peu les gros chiffres en haut */
+    .sc-num {
+        font-size: 2.5rem;
+        /* 6. On réduit le titre principal pour qu'il tienne sur une ligne */
+    #title {
+        font-size: 1.5rem;
+    }
+
+    /* 7. On met les boutons sur 2 colonnes pour gagner de la place */
+    #controls {
+        flex-wrap: wrap;
+        padding: 10px;
+    }
+    .btn {
+        flex: 1 1 45%; 
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    /* 8. On répare la légende sous la carte */
+    #legend {
+        flex-wrap: wrap;
+        justify-content: center;
+        line-height: 2;
+        padding-bottom: 20px;
+    }
+    .leg {
+        margin-left: 10px !important;
+    }
+
+    /* 9. On ajuste le bandeau EN DIRECT */
+    #ticker {
+        flex-direction: column;
+        height: auto;
+    }
+    #ticker-badge {
+        width: 100%;
+        text-align: center;
+        padding: 5px 0;
+    }
+
+    /* --- CORRECTIONS FINALES MOBILE --- */
+    #title {
+        font-size: 1.1rem; /* On force le titre sur une seule ligne */
+        letter-spacing: 1px;
+    }
+    /* 2. Le Panneau d'information intégré et fixe */
+    body div#tooltip {
+        position: relative !important; /* Reste sous les scénarios */
+        top: auto !important; left: auto !important; bottom: auto !important;
+        transform: none !important;
+        width: 100% !important;
+        min-height: 85px !important; /* HAUTEUR FIXE : Empêche la carte de glisser ! */
+        margin: 0 !important;
+        padding: 5px 0 !important;
+        background: rgba(20, 25, 45, 0.4) !important;
+        border: none !important;
+        border-top: 1px solid rgba(255,255,255,0.05) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        pointer-events: none !important;
+    }
+    
+    /* On ajuste le texte pour qu'il soit propre et centré */
+    body div#tooltip * {
+        text-align: center !important;
+        margin: 2px 0 !important;
+    }
+    body div#tooltip h2 { font-size: 1.2rem !important; }
+    body div#tooltip h3 { font-size: 0.9rem !important; }
+    
+    /* On cache la barre de progression et le texte "Clic gauche..." qui prennent trop de place */
+    body div#tooltip .bar-bg,
+    body div#tooltip .instruct {
+        display: none !important;
+    }
+    #sidebar {
+        padding-bottom: 60px; /* Donne de l'air en bas pour le bandeau EN DIRECT */
+    }
+    }
+}
+
+/* ==========================================
+   RÉPARATION DES CLICS SUR MOBILE (ZÉRO BUG)
+   ========================================== */
+@media (max-width: 900px) {
+    /* 1. Force le téléphone à cliquer instantanément sans attendre */
+    svg path {
+        touch-action: manipulation !important;
+        cursor: pointer !important;
+    }
+
+    /* 2. On désactive l'effet de survol (le contour blanc) qui rend le téléphone confus */
+    svg path:hover {
+        stroke: inherit !important; 
+        stroke-width: inherit !important;
+    }
+}

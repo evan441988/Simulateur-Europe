@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>États-Unis d'Europe — Élection Présidentielle</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body id="app-root">
+  <div id="welcome-overlay" class="welcome-overlay">
+        <div class="welcome-modal">
+            <h2 class="welcome-title">Bienvenue en 2030</h2>
+            <p class="welcome-text">
+                Après des décennies d'intégration, l'Union Européenne a franchi le pas décisif : la création des <strong>États-Unis d'Europe</strong>.<br><br>
+                Pour la première fois, les citoyens européens vont élire leur Président au suffrage universel indirect. La bataille fait rage entre les partisans d'une fédération puissante et les défenseurs des souverainetés nationales.<br><br>
+                Vous êtes le chef d'orchestre de cette nuit électorale historique. Analysez les scénarios, basculez les États et trouvez le chemin vers les 470 grands électeurs.
+            </p>
+            <button id="start-btn" class="welcome-btn">Accéder au Simulateur</button>
+        </div>
+    </div>
+
+<!-- HEADER -->
+<div id="header">
+  <div>
+    <div id="title">États-Unis d'Europe</div>
+    <div id="subtitle">Simulateur · Élection Présidentielle · 538 Grands Électeurs</div>
+  </div>
+  <div class="live"><div class="live-dot"></div>RÉSULTATS EN DIRECT</div>
+</div>
+
+<!-- SCOREBOARD + SNAKE -->
+<div id="topbar">
+  <div class="scores-row">
+    <div class="sc-block">
+      <div class="sc-party dem">Fédéralistes</div>
+      <div class="sc-num dem" id="score-dem">0</div>
+    </div>
+    <div class="sc-center">
+      <div class="sc-470">470</div>
+      <div class="sc-label">Pour gagner</div>
+    </div>
+    <div class="sc-block" style="align-items:flex-end">
+      <div class="sc-party rep">Souverainistes</div>
+      <div class="sc-num rep" id="score-rep">0</div>
+    </div>
+  </div>
+
+  <div id="snake-wrap">
+    <div id="snake-dem"></div>
+    <div id="snake-tossup"></div>
+    <div id="snake-rep"></div>
+    <div class="snake-center"></div>
+  </div>
+
+  <div id="tossup-row">
+    <div class="tossup-pill">
+      <div class="tossup-dot"></div>
+      <span class="tossup-label">Non assigné</span>
+      <span id="score-tossup">538</span>
+      <span class="tossup-ev">EV</span>
+    </div>
+    <button class="btn-share" onclick="copyShareUrl()">🔗 Copier le lien</button>
+  </div>
+  <div id="winner-bar"></div>
+</div>
+
+<!-- MAP + SIDEBAR -->
+<div id="main">
+  <div id="map-panel">
+    <div id="controls">
+      <span class="ctrl-lbl">Scénarios</span>
+      <button class="btn btn-reset"  onclick="resetAll()">↺ Réinitialiser</button>
+      <button class="btn btn-blue"   onclick="applyWave('blue')">🌊 Scénario Fédéraliste</button>
+      <button class="btn btn-red"    onclick="applyWave('red')">🌊 Scénario Souverainiste</button>
+      <button class="btn btn-split"  onclick="applyClivage()">🗺 Clivage Est/Ouest</button>
+      <button class="btn btn-export" onclick="exportImage()">📸 Exporter PNG</button>
+    </div>
+    <div id="map-svg-wrap">
+      <svg id="map" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="eu-shadow" x="-12%" y="-12%" width="124%" height="124%">
+            <feDropShadow dx="0" dy="4" stdDeviation="5"
+              flood-color="#000000" flood-opacity="0.62"/>
+          </filter>
+        </defs>
+      </svg>
+    </div>
+    <div id="legend">
+      <div class="leg"><div class="leg-d" style="background:var(--blue)"></div>Fédéralistes</div>
+      <div class="leg"><div class="leg-d" style="background:var(--blue-l)"></div>Lég. Fédéralistes</div>
+      <div class="leg"><div class="leg-d" style="background:var(--neutral);border:1px solid #555"></div>Neutre</div>
+      <div class="leg"><div class="leg-d" style="background:var(--red-l)"></div>Lég. Souverainistes</div>
+      <div class="leg"><div class="leg-d" style="background:var(--red)"></div>Souverainistes</div>
+      <div class="leg" style="margin-left:auto;font-size:0.5rem;color:var(--text-muted);">
+        Clic gauche = avancer · Clic droit = réinitialiser
+      </div>
+    </div>
+  </div>
+
+  <div id="sidebar">
+    <div class="sb-hdr">📊 États Remportés</div>
+    <div class="sb-scroll" id="sb-content"></div>
+  </div>
+</div>
+
+<!-- BREAKING NEWS TICKER -->
+<div id="ticker">
+  <div id="ticker-badge">⚡ EN DIRECT</div>
+  <div id="ticker-track"></div>
+</div>
+
+<!-- Tooltip & Toast -->
+<div id="tooltip"></div>
+<div id="share-toast">🔗 URL copiée dans le presse-papier !</div>
+
+<!-- Scripts: data constants first, then application logic -->
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
