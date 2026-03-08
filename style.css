@@ -602,27 +602,8 @@ svg#map{
         stroke: inherit !important; 
         stroke-width: inherit !important;
     }
-}
-/* ==========================================
-       RÉPARATION DE L'ÉCRAN D'ACCUEIL MOBILE
-       ========================================== */
-    #welcome-overlay {
-        overflow-y: auto !important; /* Autorise le scroll si le texte dépasse */
-        align-items: flex-start !important; /* Empêche le blocage du haut et du bas */
-        padding: 20px !important;
-    }
-
-    #welcome-overlay p {
-        font-size: 0.9rem !important; /* Réduit la taille de la police */
-        line-height: 1.4 !important; /* Rapproche un peu les lignes */
-    }
-
-    /* Si l'IA a mis le texte dans une boîte centrale */
-    #welcome-overlay > div {
-        margin-top: 30px !important;
-        margin-bottom: 40px !important; /* Donne de l'air sous le bouton */
-    }
     /* 3. On nettoie la carte sur mobile en cachant les textes écrasés */
     svg text {
         display: none !important;
     }
+}
