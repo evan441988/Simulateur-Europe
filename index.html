@@ -9,12 +9,43 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+
 <style>
-  /* Hack pour cacher la barre de défilement des boutons sur mobile */
+  /* Cacher la barre de défilement des boutons */
   .scrollbar-hide::-webkit-scrollbar { display: none; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Règles appliquées UNIQUEMENT sur les téléphones */
+  @media (max-width: 768px) {
+    /* 1. On cache la légende et le bandeau news pour laisser 100% de place à la carte */
+    #legend, #ticker {
+      display: none !important;
+    }
+    
+    /* 2. On réduit l'infobulle pour ne pas gêner les clics */
+    #tooltip {
+      font-size: 10px !important;
+      padding: 4px 8px !important;
+      line-height: 1.2 !important;
+      border-radius: 4px !important;
+      /* On la réduit encore un peu visuellement au cas où le JS force la taille */
+      transform: scale(0.85); 
+      transform-origin: top left;
+    }
+
+    /* 3. On amincit au maximum la barre des scénarios */
+    #controls {
+      padding: 4px !important;
+    }
+    .btn {
+      padding: 4px 8px !important;
+      font-size: 10px !important;
+      height: auto !important;
+    }
+  }
 </style>
 </head>
+
 <body id="app-root">
   
     <div id="welcome-overlay" class="welcome-overlay">
