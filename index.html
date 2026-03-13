@@ -6,117 +6,123 @@
 <title>États-Unis d'Europe — Élection Présidentielle</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body id="app-root">
-  <div id="welcome-overlay" class="welcome-overlay">
-        <div class="welcome-modal">
-            <h2 class="welcome-title">Bienvenue en 2030</h2>
-            <p class="welcome-text">
+<body id="app-root" class="h-screen flex flex-col overflow-hidden bg-gray-900 text-white font-sans">
+  
+    <div id="welcome-overlay" class="welcome-overlay z-50">
+        <div class="welcome-modal p-6 md:p-8 max-h-screen overflow-y-auto">
+            <h2 class="welcome-title text-2xl md:text-4xl font-bold mb-4">Bienvenue en 2030</h2>
+            <p class="welcome-text text-sm md:text-base leading-relaxed mb-6">
                 Après des décennies d'intégration, l'Union Européenne a franchi le pas décisif : la création des <strong>États-Unis d'Europe</strong>.<br><br>
                 Pour la première fois, les citoyens européens vont élire leur Président au suffrage universel indirect. La bataille fait rage entre les partisans d'une fédération puissante et les défenseurs des souverainetés nationales.<br><br>
                 Vous êtes le chef d'orchestre de cette nuit électorale historique. Analysez les scénarios, basculez les États et trouvez le chemin vers les 470 grands électeurs.
             </p>
-            <button id="start-btn" class="welcome-btn">Accéder au Simulateur</button>
+            <button id="start-btn" class="welcome-btn bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-lg w-full transition-colors">Accéder au Simulateur</button>
         </div>
     </div>
 
-<!-- HEADER -->
-<div id="header">
-  <div>
-    <div id="title">États-Unis d'Europe</div>
-    <div id="subtitle">Simulateur · Élection Présidentielle · 538 Grands Électeurs</div>
+<div id="header" class="flex flex-row justify-between items-center py-2 px-3 md:py-4 md:px-6 border-b border-gray-800 bg-gray-950 flex-shrink-0">
+  <div class="flex flex-col">
+    <div id="title" class="text-base md:text-2xl font-black uppercase tracking-wide">États-Unis d'Europe</div>
+    <div id="subtitle" class="text-[9px] md:text-xs text-gray-400 tracking-wider">Simulateur · Élection Présidentielle · 538 Grands Électeurs</div>
   </div>
-  <div class="live"><div class="live-dot"></div>RÉSULTATS EN DIRECT</div>
+  <div class="live flex items-center text-[9px] md:text-xs text-red-500 font-bold uppercase tracking-widest bg-red-950/30 px-2 py-1 rounded-full">
+      <div class="live-dot w-1.5 h-1.5 md:w-2 md:h-2 bg-red-500 rounded-full mr-1.5 animate-pulse"></div>
+      <span class="hidden md:inline">RÉSULTATS </span>EN DIRECT
+  </div>
 </div>
 
-<!-- SCOREBOARD + SNAKE -->
-<div id="topbar">
-  <div class="scores-row">
-    <div class="sc-block">
-      <div class="sc-party dem">Fédéralistes</div>
-      <div class="sc-num dem" id="score-dem">0</div>
+<div id="topbar" class="bg-gray-900 border-b border-gray-800 flex-shrink-0">
+  <div class="scores-row flex justify-between items-center px-4 py-2 md:py-4">
+    <div class="sc-block flex flex-col w-1/3">
+      <div class="sc-party dem text-[10px] md:text-sm font-bold text-blue-400 uppercase tracking-wider">Fédéralistes</div>
+      <div class="sc-num dem text-3xl md:text-6xl font-black text-blue-500 leading-none" id="score-dem">0</div>
     </div>
-    <div class="sc-center">
-      <div class="sc-470">470</div>
-      <div class="sc-label">Pour gagner</div>
+    <div class="sc-center flex flex-col items-center w-1/3">
+      <div class="sc-470 text-lg md:text-2xl font-black text-gray-200">470</div>
+      <div class="sc-label text-[8px] md:text-xs text-gray-500 uppercase tracking-widest">Pour gagner</div>
     </div>
-    <div class="sc-block" style="align-items:flex-end">
-      <div class="sc-party rep">Souverainistes</div>
-      <div class="sc-num rep" id="score-rep">0</div>
+    <div class="sc-block flex flex-col items-end w-1/3">
+      <div class="sc-party rep text-[10px] md:text-sm font-bold text-red-400 uppercase tracking-wider">Souverainistes</div>
+      <div class="sc-num rep text-3xl md:text-6xl font-black text-red-500 leading-none" id="score-rep">0</div>
     </div>
   </div>
 
-  <div id="snake-wrap">
-    <div id="snake-dem"></div>
-    <div id="snake-tossup"></div>
-    <div id="snake-rep"></div>
-    <div class="snake-center"></div>
+  <div id="snake-wrap" class="relative h-2 md:h-4 bg-gray-800 w-full flex">
+    <div id="snake-dem" class="h-full bg-blue-500 transition-all duration-500"></div>
+    <div id="snake-tossup" class="h-full bg-gray-600 transition-all duration-500"></div>
+    <div id="snake-rep" class="h-full bg-red-500 transition-all duration-500"></div>
+    <div class="snake-center absolute left-1/2 top-0 bottom-0 w-0.5 bg-white z-10"></div>
   </div>
 
-  <div id="tossup-row">
-    <div class="tossup-pill">
-      <div class="tossup-dot"></div>
-      <span class="tossup-label">Non assigné</span>
-      <span id="score-tossup">538</span>
-      <span class="tossup-ev">EV</span>
+  <div id="tossup-row" class="flex justify-between items-center px-3 py-1.5 md:p-3 bg-gray-950 text-[10px] md:text-xs">
+    <div class="tossup-pill flex items-center text-gray-400">
+      <div class="tossup-dot w-2 h-2 bg-gray-500 rounded-full mr-2"></div>
+      <span class="tossup-label uppercase mr-1">Non assigné :</span>
+      <span id="score-tossup" class="font-bold text-white mx-1">538</span>
+      <span class="tossup-ev">Sièges</span>
     </div>
-    <button class="btn-share" onclick="copyShareUrl()">🔗 Copier le lien</button>
+    <button class="btn-share text-blue-400 hover:text-blue-300 flex items-center gap-1 font-semibold" onclick="copyShareUrl()">🔗 <span class="hidden md:inline">Copier le lien</span></button>
   </div>
   <div id="winner-bar"></div>
 </div>
 
-<!-- MAP + SIDEBAR -->
-<div id="main">
-  <div id="map-panel">
-    <div id="controls">
-      <span class="ctrl-lbl">Scénarios</span>
-      <button class="btn btn-reset"  onclick="resetAll()">↺ Réinitialiser</button>
-      <button class="btn btn-blue"   onclick="applyWave('blue')">🌊 Scénario Fédéraliste</button>
-      <button class="btn btn-red"    onclick="applyWave('red')">🌊 Scénario Souverainiste</button>
-      <button class="btn btn-split"  onclick="applyClivage()">🗺 Clivage Est/Ouest</button>
-      <button class="btn btn-export" onclick="exportImage()">📸 Exporter PNG</button>
+<div id="main" class="flex flex-1 flex-col md:flex-row overflow-hidden relative">
+  
+  <div id="map-panel" class="flex-1 flex flex-col relative h-full">
+    
+    <div id="controls" class="flex items-center gap-2 p-2 md:p-4 overflow-x-auto whitespace-nowrap scrollbar-hide bg-gray-800/50 border-b border-gray-700 z-10 flex-shrink-0">
+      <span class="ctrl-lbl text-[10px] md:text-sm font-bold text-gray-400 uppercase tracking-wider shrink-0 mr-1">Scénarios</span>
+      <button class="btn btn-reset shrink-0 text-[10px] md:text-sm px-3 py-1.5 md:px-4 md:py-2 bg-gray-700 hover:bg-gray-600 rounded shadow" onclick="resetAll()">↺ Réinitialiser</button>
+      <button class="btn btn-blue shrink-0 text-[10px] md:text-sm px-3 py-1.5 md:px-4 md:py-2 bg-blue-900/60 hover:bg-blue-800 rounded shadow border border-blue-700 text-blue-100" onclick="applyWave('blue')">🌊 Scénario Fédéraliste</button>
+      <button class="btn btn-red shrink-0 text-[10px] md:text-sm px-3 py-1.5 md:px-4 md:py-2 bg-red-900/60 hover:bg-red-800 rounded shadow border border-red-700 text-red-100" onclick="applyWave('red')">🌊 Scénario Souverainiste</button>
+      <button class="btn btn-split shrink-0 text-[10px] md:text-sm px-3 py-1.5 md:px-4 md:py-2 bg-purple-900/60 hover:bg-purple-800 rounded shadow border border-purple-700 text-purple-100" onclick="applyClivage()">🗺 Clivage Est/Ouest</button>
+      <button class="btn btn-export shrink-0 text-[10px] md:text-sm px-3 py-1.5 md:px-4 md:py-2 bg-green-900/60 hover:bg-green-800 rounded shadow border border-green-700 text-green-100" onclick="exportImage()">📸 Exporter PNG</button>
     </div>
-    <div id="map-svg-wrap">
-      <svg id="map" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid meet">
+
+    <div id="map-svg-wrap" class="flex-1 relative overflow-hidden bg-[#111827]">
+      <svg id="map" class="w-full h-full" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid meet">
         <defs>
           <filter id="eu-shadow" x="-12%" y="-12%" width="124%" height="124%">
-            <feDropShadow dx="0" dy="4" stdDeviation="5"
-              flood-color="#000000" flood-opacity="0.62"/>
+            <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000000" flood-opacity="0.62"/>
           </filter>
         </defs>
       </svg>
     </div>
-    <div id="legend">
-      <div class="leg"><div class="leg-d" style="background:var(--blue)"></div>Fédéralistes</div>
-      <div class="leg"><div class="leg-d" style="background:var(--blue-l)"></div>Lég. Fédéralistes</div>
-      <div class="leg"><div class="leg-d" style="background:var(--neutral);border:1px solid #555"></div>Neutre</div>
-      <div class="leg"><div class="leg-d" style="background:var(--red-l)"></div>Lég. Souverainistes</div>
-      <div class="leg"><div class="leg-d" style="background:var(--red)"></div>Souverainistes</div>
-      <div class="leg" style="margin-left:auto;font-size:0.5rem;color:var(--text-muted);">
-        Clic gauche = avancer · Clic droit = réinitialiser
-      </div>
+
+    <div id="legend" class="flex flex-wrap justify-center gap-2 md:gap-4 p-2 bg-gray-950/80 absolute bottom-0 w-full text-[9px] md:text-xs text-gray-300 z-10 border-t border-gray-800">
+      <div class="leg flex items-center"><div class="leg-d w-2 h-2 md:w-3 md:h-3 rounded-full mr-1.5" style="background:var(--blue, #3b82f6)"></div>Fédéralistes</div>
+      <div class="leg flex items-center"><div class="leg-d w-2 h-2 md:w-3 md:h-3 rounded-full mr-1.5" style="background:var(--blue-l, #93c5fd)"></div>Lég. Fédéralistes</div>
+      <div class="leg flex items-center"><div class="leg-d w-2 h-2 md:w-3 md:h-3 rounded-full mr-1.5 border border-gray-500" style="background:var(--neutral, #4b5563)"></div>Neutre</div>
+      <div class="leg flex items-center"><div class="leg-d w-2 h-2 md:w-3 md:h-3 rounded-full mr-1.5" style="background:var(--red-l, #fca5a5)"></div>Lég. Souverainistes</div>
+      <div class="leg flex items-center"><div class="leg-d w-2 h-2 md:w-3 md:h-3 rounded-full mr-1.5" style="background:var(--red, #ef4444)"></div>Souverainistes</div>
+      <div class="w-full text-center mt-1 text-[8px] md:text-[10px] text-gray-500">Clic gauche = avancer · Clic droit = reculer</div>
     </div>
   </div>
 
-  <div id="sidebar">
-    <div class="sb-hdr">📊 États Remportés</div>
-    <div class="sb-scroll" id="sb-content"></div>
+  <div id="sidebar" class="hidden md:flex flex-col w-64 bg-gray-900 border-l border-gray-800 z-20">
+    <div class="sb-hdr p-4 font-bold text-sm uppercase tracking-wider border-b border-gray-800 bg-gray-950">📊 États Remportés</div>
+    <div class="sb-scroll overflow-y-auto flex-1 p-2" id="sb-content"></div>
   </div>
 </div>
 
-<!-- BREAKING NEWS TICKER -->
-<div id="ticker">
-  <div id="ticker-badge">⚡ EN DIRECT</div>
-  <div id="ticker-track"></div>
+<div id="ticker" class="flex bg-red-700 text-white text-[10px] md:text-xs overflow-hidden h-6 md:h-8 flex-shrink-0">
+  <div id="ticker-badge" class="font-black px-2 md:px-4 py-1 bg-red-900 z-10 shadow-lg flex items-center uppercase tracking-widest whitespace-nowrap">⚡ EN DIRECT</div>
+  <div id="ticker-track" class="flex-1 whitespace-nowrap flex items-center px-4 animate-[ticker_20s_linear_infinite]">
+    </div>
 </div>
 
-<!-- Tooltip & Toast -->
-<div id="tooltip"></div>
-<div id="share-toast">🔗 URL copiée dans le presse-papier !</div>
+<div id="tooltip" class="absolute hidden bg-gray-900 border border-gray-700 px-3 py-2 rounded shadow-2xl text-xs z-50 pointer-events-none"></div>
+<div id="share-toast" class="fixed top-4 left-1/2 -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded shadow-2xl z-50 hidden text-sm font-bold">🔗 URL copiée dans le presse-papier !</div>
 
-<!-- Scripts: data constants first, then application logic -->
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>
