@@ -24,7 +24,7 @@
         </div>
     </div>
 
-<div id="header" class="flex flex-row justify-between items-center py-2 px-3 md:py-4 md:px-6 border-b border-gray-800 bg-gray-950 flex-shrink-0">
+<div id="header" class="flex flex-row justify-between items-center py-2 px-3 md:py-4 md:px-6 border-b border-gray-800 bg-gray-950 shrink-0">
   <div class="flex flex-col">
     <div id="title" class="text-base md:text-2xl font-black uppercase tracking-wide">États-Unis d'Europe</div>
     <div id="subtitle" class="text-[9px] md:text-xs text-gray-400 tracking-wider">Simulateur · Élection Présidentielle · 538 Grands Électeurs</div>
@@ -35,7 +35,7 @@
   </div>
 </div>
 
-<div id="topbar" class="bg-gray-900 border-b border-gray-800 flex-shrink-0">
+<div id="topbar" class="bg-gray-900 border-b border-gray-800 shrink-0">
   <div class="scores-row flex justify-between items-center px-4 py-2 md:py-4">
     <div class="sc-block flex flex-col w-1/3">
       <div class="sc-party dem text-[10px] md:text-sm font-bold text-blue-400 uppercase tracking-wider">Fédéralistes</div>
@@ -70,11 +70,11 @@
   <div id="winner-bar"></div>
 </div>
 
-<div id="main" class="flex flex-1 flex-col md:flex-row overflow-hidden relative">
+<div id="main" class="flex flex-1 flex-col md:flex-row min-h-0 relative w-full">
   
-  <div id="map-panel" class="flex-1 flex flex-col relative h-full">
+  <div id="map-panel" class="flex-1 flex flex-col min-h-0 relative w-full">
     
-    <div id="controls" class="flex items-center gap-2 p-2 md:p-4 overflow-x-auto whitespace-nowrap scrollbar-hide bg-gray-800/50 border-b border-gray-700 z-10 flex-shrink-0">
+    <div id="controls" class="flex items-center gap-2 p-2 md:p-4 overflow-x-auto whitespace-nowrap scrollbar-hide bg-gray-800/50 border-b border-gray-700 z-10 shrink-0">
       <span class="ctrl-lbl text-[10px] md:text-sm font-bold text-gray-400 uppercase tracking-wider shrink-0 mr-1">Scénarios</span>
       <button class="btn btn-reset shrink-0 text-[10px] md:text-sm px-3 py-1.5 md:px-4 md:py-2 bg-gray-700 hover:bg-gray-600 rounded shadow" onclick="resetAll()">↺ Réinitialiser</button>
       <button class="btn btn-blue shrink-0 text-[10px] md:text-sm px-3 py-1.5 md:px-4 md:py-2 bg-blue-900/60 hover:bg-blue-800 rounded shadow border border-blue-700 text-blue-100" onclick="applyWave('blue')">🌊 Scénario Fédéraliste</button>
@@ -83,8 +83,8 @@
       <button class="btn btn-export shrink-0 text-[10px] md:text-sm px-3 py-1.5 md:px-4 md:py-2 bg-green-900/60 hover:bg-green-800 rounded shadow border border-green-700 text-green-100" onclick="exportImage()">📸 Exporter PNG</button>
     </div>
 
-    <div id="map-svg-wrap" class="flex-1 relative overflow-hidden bg-[#111827]">
-      <svg id="map" class="w-full h-full" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid meet">
+    <div id="map-svg-wrap" class="flex-1 min-h-0 relative w-full bg-[#111827]">
+      <svg id="map" class="absolute inset-0 w-full h-full" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid meet">
         <defs>
           <filter id="eu-shadow" x="-12%" y="-12%" width="124%" height="124%">
             <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000000" flood-opacity="0.62"/>
@@ -93,7 +93,7 @@
       </svg>
     </div>
 
-    <div id="legend" class="flex flex-wrap justify-center gap-2 md:gap-4 p-2 bg-gray-950/80 absolute bottom-0 w-full text-[9px] md:text-xs text-gray-300 z-10 border-t border-gray-800">
+    <div id="legend" class="shrink-0 flex flex-wrap justify-center gap-2 md:gap-4 p-2 bg-gray-950 w-full text-[9px] md:text-xs text-gray-300 z-10 border-t border-gray-800">
       <div class="leg flex items-center"><div class="leg-d w-2 h-2 md:w-3 md:h-3 rounded-full mr-1.5" style="background:var(--blue, #3b82f6)"></div>Fédéralistes</div>
       <div class="leg flex items-center"><div class="leg-d w-2 h-2 md:w-3 md:h-3 rounded-full mr-1.5" style="background:var(--blue-l, #93c5fd)"></div>Lég. Fédéralistes</div>
       <div class="leg flex items-center"><div class="leg-d w-2 h-2 md:w-3 md:h-3 rounded-full mr-1.5 border border-gray-500" style="background:var(--neutral, #4b5563)"></div>Neutre</div>
@@ -103,13 +103,13 @@
     </div>
   </div>
 
-  <div id="sidebar" class="hidden md:flex flex-col w-64 bg-gray-900 border-l border-gray-800 z-20">
+  <div id="sidebar" class="hidden md:flex flex-col w-64 bg-gray-900 border-l border-gray-800 z-20 shrink-0">
     <div class="sb-hdr p-4 font-bold text-sm uppercase tracking-wider border-b border-gray-800 bg-gray-950">📊 États Remportés</div>
     <div class="sb-scroll overflow-y-auto flex-1 p-2" id="sb-content"></div>
   </div>
 </div>
 
-<div id="ticker" class="flex bg-red-700 text-white text-[10px] md:text-xs overflow-hidden h-6 md:h-8 flex-shrink-0">
+<div id="ticker" class="flex bg-red-700 text-white text-[10px] md:text-xs overflow-hidden h-6 md:h-8 shrink-0">
   <div id="ticker-badge" class="font-black px-2 md:px-4 py-1 bg-red-900 z-10 shadow-lg flex items-center uppercase tracking-widest whitespace-nowrap">⚡ EN DIRECT</div>
   <div id="ticker-track" class="flex-1 whitespace-nowrap flex items-center px-4 animate-[ticker_20s_linear_infinite]">
     </div>
